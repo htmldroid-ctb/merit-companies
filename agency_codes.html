@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merit Users — Agency Codes Directory</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e17;
+    --surface: #111620;
+    --surface2: #161c2d;
+    --border: #1f2a40;
+    --accent: #e8b84b;
+    --accent2: #4b8de8;
+    --text: #d4dff5;
+    --muted: #5a6a8a;
+    --danger: #e84b4b;
+    --success: #4be87a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,184,75,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,184,75,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 48px 60px 36px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(232,184,75,0.06) 0%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .header-left .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-left .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .header-left h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    letter-spacing: 2px;
+    color: #fff;
+    line-height: 0.95;
+  }
+
+  .header-left h1 span {
+    color: var(--accent);
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* TOOLBAR */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(11,14,23,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 420px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 10px 14px 10px 38px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus {
+    border-color: var(--accent);
+  }
+
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .filter-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .filter-select:focus { border-color: var(--accent); }
+
+  .result-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .btn-add {
+    background: var(--accent);
+    color: #0b0e17;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .btn-add:hover { background: #f0c96a; transform: translateY(-1px); }
+
+  /* TABLE */
+  .table-container {
+    position: relative;
+    z-index: 1;
+    padding: 24px 60px 60px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: var(--thead-top, 57px);
+    background: var(--bg);
+    z-index: 5;
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  thead th:first-child { width: 50px; }
+  thead th:nth-child(2) { width: 180px; }
+  thead th:nth-child(3) { min-width: 240px; }
+  thead th:nth-child(4) { width: 120px; }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(31,42,64,0.5);
+    transition: background 0.15s;
+    animation: fadeIn 0.3s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  tbody tr:hover { background: var(--surface); }
+
+  tbody td {
+    padding: 15px 20px;
+    font-size: 14px;
+    vertical-align: middle;
+    line-height: 1.5;
+  }
+
+  .td-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    width: 50px;
+    padding-right: 16px;
+  }
+
+  .code-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .agency-name {
+    font-weight: 500;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  .type-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .type-1 { background: rgba(75,141,232,0.15); color: var(--accent2); border: 1px solid rgba(75,141,232,0.3); }
+  .type-2 { background: rgba(232,184,75,0.12); color: var(--accent); border: 1px solid rgba(232,184,75,0.25); }
+  .type-3 { background: rgba(75,232,122,0.12); color: var(--success); border: 1px solid rgba(75,232,122,0.25); }
+  .type-4 { background: rgba(232,75,75,0.12); color: var(--danger); border: 1px solid rgba(232,75,75,0.25); }
+  .type-5 { background: rgba(180,75,232,0.12); color: #b44be8; border: 1px solid rgba(180,75,232,0.25); }
+  .type-6 { background: rgba(75,220,232,0.12); color: #4bdce8; border: 1px solid rgba(75,220,232,0.25); }
+
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.25s;
+    position: relative;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+  .modal h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+
+  .modal-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .modal-close:hover { border-color: var(--danger); color: var(--danger); }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus { border-color: var(--accent); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #0b0e17;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .btn-submit:hover { background: #f0c96a; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--success);
+    color: #0b0e17;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 14px 22px;
+    border-radius: 8px;
+    z-index: 200;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state svg { margin-bottom: 16px; opacity: 0.4; }
+  .empty-state p { font-family: 'DM Mono', monospace; font-size: 13px; }
+
+  @media (max-width: 768px) {
+    header, .toolbar, .table-container { padding-left: 20px; padding-right: 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal { padding: 28px 20px; margin: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="eyebrow">Merit Users System</div>
+    <h1>Agency <span>Codes</span><br>Directory</h1>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-num" id="totalCount">—</div>
+      <div class="stat-label">Total Agencies</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="typeCount">6</div>
+      <div class="stat-label">Code Types</div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Search agency name or code…">
+  </div>
+  <select class="filter-select" id="typeFilter">
+    <option value="">All Types</option>
+    <option value="1">Type 1</option>
+    <option value="2">Type 2</option>
+    <option value="3">Type 3</option>
+    <option value="4">Type 4</option>
+    <option value="5">Type 5</option>
+    <option value="6">Type 6</option>
+  </select>
+  <span class="result-count" id="resultCount"></span>
+  <button class="btn-add" onclick="openModal()">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    Add Agency
+  </button>
+</div>
+
+<div class="table-container">
+  <table id="agencyTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Code</th>
+        <th>Agency Name</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="#5a6a8a" stroke-width="2"/><path d="M16 24h16M24 16v16" stroke="#5a6a8a" stroke-width="2" stroke-linecap="round"/></svg>
+    <p>No agencies match your search.</p>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Add Agency</h2>
+    <p class="modal-sub">New directory entry</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type Prefix</label>
+        <select id="newType">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Code Number</label>
+        <input type="number" id="newCodeNum" placeholder="e.g. 320" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Agency Name</label>
+      <input type="text" id="newAgencyName" placeholder="e.g. Acme Recruitment Ltd">
+    </div>
+    <button class="btn-submit" onclick="addAgency()">Add to Directory</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Agency added successfully</div>
+
+<script>
+const rawData = [
+  ["2*21","4 Recruitment"],["2*119","Access Avidity Ltd"],["1*9","Ackerman Pierce"],
+  ["1*31","Adapt Recruit"],["2*43","Adecco"],["2*143","Alexander Mann - PSR"],
+  ["2*148","Alphayotta"],["1*23","Anglo Technical"],["2*155","Archer Resourcing"],
+  ["2*166","Arrows Group"],["2*138","Avon Drivers"],["2*80","Axcis Education"],
+  ["2*124","Baltimore Consulting Limited"],["2*41","Barrington James"],
+  ["2*86","Birchester Care Ltd"],["2*146","Blackstone"],["2*19","Blueprint"],
+  ["2*68","Brookwood BW"],["2*123","Casa4Funds"],["2*62","CDH Recruitment"],
+  ["1*25","Charles Hunter Associates"],["2*164","Clearwater People Solutions"],
+  ["2*101","Connect2SocialWork"],["2*113","Contek Recruitment Solutions"],
+  ["2*58","DAB Technical Recruitment Ltd"],["2*129","Daytime Healthcare Recruitment"],
+  ["2*92","Decoright Contracts UK Ltd"],["2*140","Delight Supported Living"],
+  ["2*107","Division Recruitment"],["2*105","ECS Ltd AB"],["2*55","Elite Classrooms Ltd"],
+  ["2*60","Essential Personnel"],["2*34","Excel Technical Resourcing sol"],
+  ["2*169","Fit Recruitment"],["2*171","FullStack"],["2*163","Gios Technology"],
+  ["2*71","HAMPTONS RESOURCING"],["2*153","Harrington Starr"],["2*161","Hayward Hawk Ltd"],
+  ["2*121","ID Medical"],["2*70","Imes International Ltd"],["2*141","Impact"],
+  ["2*26","Impellam"],["2*100","Imperium Resourcing"],["2*151","ITECCO"],
+  ["2*32","Jems RECRUITMENT"],["2*74","JMF Courier Services Ltd"],
+  ["2*162","Joshua Roberts"],["2*114","L And G Recruitment"],["1*24","Liquid Recruitment"],
+  ["2*134","Logical Personnel Solutions Li"],["2*103","Mainstay Recruitment Solutions"],
+  ["1*16","Maxxima"],["2*53","MedicsPro"],["2*117","Medisca"],["2*56","Michael Page"],
+  ["2*95","Microtech Global"],["2*159","M-Tec Engineering Solutions"],
+  ["2*47","Newlands Healthcare"],["2*78","NonStop Consulting Ltd"],
+  ["2*132","Number1Recruit"],["2*150","Healthcare Staff 24 Ltd"],
+  ["2*122","Oliver James"],["2*160","Oliver Marks Consulting Ltd"],
+  ["2*11","Only Social Care"],["2*130","oyster parnerships"],["2*136","P2CG Limited"],
+  ["2*48","Paragon Locums Ltd"],["2*52","Parity"],["2*49","Park Avenue"],
+  ["2*248","Pertemps"],["2*137","Pin Point"],["2*36","Pollen Street Capital"],
+  ["2*131","Premier People Recruitment"],["2*51","Proactive"],["2*81","PROREC PR"],
+  ["2*142","Public Sector Resourcing"],["1*15","Pulse"],
+  ["2*167","Purview Consultancy Services L"],["2*59","Qualiteach LTD"],
+  ["2*126","Quality Care Cover Limited"],["1*77","Quantics"],
+  ["2*94","Randburg Electrical Services"],["2*89","Randburg specialist services"],
+  ["2*46","Red Sector Recruitment Ltd"],["2*50","Reed"],["2*106","REGENT GAS"],
+  ["2*42","Remedy"],["1*33","Renold Cluches and Couplings"],
+  ["2*152","Revelution Technology"],["2*125","ROC Search (£19 Margin)"],
+  ["2*98","Royal Agricultural University"],["2*91","RT Social Care"],["2*96","Salt"],
+  ["1*13","Sanctuary Personnel Ltd"],["2*158","SeQuenX Recruitment"],
+  ["2*20","Service Care"],["2*57","SF Recruitment Ltd"],
+  ["2*165","Silverlink Technologies LTD"],["2*65","Sinclair Recruitment"],
+  ["2*128","Site Link Uk"],["2*72","Smith Bullough"],["1*12","Social Personnel"],
+  ["2*118","Spencer Clarke Group"],["2*120","SRS Ltd"],["1*44","Supplycare Solution"],
+  ["1*63","Sweco"],["2*127","TDA Group"],["1*45","Tempest"],
+  ["2*79","The Social Recruitment Company"],["1*145","TMLS Group"],
+  ["2*173","Tomorrow London"],["1*156","Tradewind Recruitment"],["2*76","Tripod"],
+  ["2*10","Unity Recruitment"],["2*135","Venn"],["2*157","Venquis"],
+  ["2*116","Vesta Consulting"],["2*115","Virtusa UK Ltd"],["2*149","VNA umbrella"],
+  ["2*133","Waterman Aspen Ltd"],["2*112","We Build Recruitment"],
+  ["2*97","Wentworth James"],["2*172","WNA Healthcare"],["2*40","XMR"],
+  ["2*147","YunoJuno Ltd"],["2*73","Zitko Consulting Ltd"],
+  ["2*185","Piers Meadows Recruitment"],["2*143","AMS"],
+  ["2*182","Property Recruitment Company"],["2*131","PPR"],
+  ["2*188","Tank Recruitment"],["2*191","JRS Limited"],
+  ["2*193","La Fosse Associates"],["2*192","Bluebaring BB"],
+  ["2*196","Streetwise UK Management Ltd."],["2*195","DX Recuitment Ltd T/A MTS"],
+  ["2*111","My Locum"],["2*197","Mercury Hampton"],
+  ["2*199","Redstone Associates Limited"],["2*200","Tilt Recruitment Ltd"],
+  ["2*201","Bridge Recruitment Services"],["2*202","iPeople Solutions Ltd"],
+  ["2*203","Charles Hunter Associates"],["2*204","Bee Construction BC"],
+  ["2*205","James Adams"],["2*206","Concept Resourcing / Concept IT"],
+  ["2*207","Active Recruitment"],["2*208","Taylor Hopkinson"],
+  ["2*108","Care Pro"],["2*210","Akona Limited"],["2*186","Focus Select"],
+  ["2*213","ECJ"],["2*218","Excelloit"],["2*220","Seven resourcing"],
+  ["2*219","Silver Arrow"],["2*216","Temple Recruitment"],
+  ["2*221","Hays Recruitment"],["2*223","Hariley Solutions"],
+  ["2*224","Recardo Group Limited"],["2*226","empowered"],
+  ["2*225","Aecus Recruitment"],["2*217","Mphasis UK Limited"],
+  ["2*237","Rekall Consulting"],["2*233","City Recruitment"],
+  ["2*239","Vantis Technology"],["2*240","Ark Search"],
+  ["2*242","trilogy international"],["2*214","DMJ"],
+  ["2*245","Trevella EasyPay"],["2*246","Deluxe Recruitment"],
+  ["2*247","Eden Brown Synergy"],["2*249","Dolan Group"],
+  ["2*250","Bio Luminuex Healthcare Limited"],["2*251","Trevella Direct"],
+  ["2*255","WRS Recruitment Limited"],["2*256","GKH Recruitment"],
+  ["2*257","Ernest V. Waddington Limited"],["2*168","AHL Resourcing Solutions Ltd"],
+  ["2*258","Admin Grass Roots AS"],["2*259","Connect 4"],
+  ["2*260","Merco Medical Recruitment"],["2*264","Projects Recruit"],
+  ["2*262","CDL Matrix"],["2*263","Total Social"],
+  ["2*267","Skipper Recruitment"],["2*266","Coretta Recruitment Services"],
+  ["2*234","Oakwell Hampton"],["2*270","Lucid Support"],
+  ["1*273","Resource Support"],["1*272","Winner recruitment"],
+  ["2*275","CPB NORTHWEST LTD"],["2*281","The Boiler House Spaces"],
+  ["2*280","Initialize IT"],["2*282","Aten Consult"],["2*283","Worksome"],
+  ["2*285","TFS Heathcare"],["2*284","Jonathan Lee Recruitment"],
+  ["2*286","LT Harper"],["2*290","Parity Group plc"],
+  ["2*291","Healthgate Search"],["2*238","DGH Recruitment"],
+  ["2*180","charlton morris"],["2*293","Premier Recruit Ltd"],
+  ["2*292","Howett Thorpe Recruitment Consultants"],["2*294","Entrega Hire"],
+  ["2*295","The Placement Group"],["2*298","Oscar Underhill"],
+  ["2*302","Red Snapper Recruitment Ltd"],["1*305","Sinclair Recruitment PAYE"],
+  ["2*301","Pontoon Europe Limited"],["2*304","Telefonica Tech"],
+  ["2*306","Abode Resourcing Limited"],["2*307","Amida Recruitment"],
+  ["2*311","Social Work Partners"],["2*308","Devonshire Hayes"],
+  ["2*315","Soleus People Limited"],["5*317","Prorec PAYE"],
+  ["4*316","Unity PAYE"],["4*319","Ackerman PAYE"],["5*471","Thomas Gray - PAYE"],
+  ["5*334","Sinclair PAYE"],["5*373","Connect Recruitment Hub PAYE"],
+  ["2*318","Younique Care"],["2*321","Insight International"],
+  ["2*322","Athona Ltd"],["2*323","Cognitive Group Ltd"],
+  ["2*324","Track Personnel"],["2*325","connect 44"],
+  ["2*327","Skipper recruit t/a P G Recruit"],["2*328","Flex 360"],
+  ["2*329","Locum Meds"],["2*320","Itecopeople"],
+  ["2*331","The Project Foundry"],["2*332","YPG Associates LTD - Pink Giraffe"],
+  ["2*333","Best Connection (Enfield)"],["2*236","Buckingham Futures"],
+  ["2*342","Kirivani Ltd t/a Nexgen Locums"],["2*345","Workforce Solutions"],
+  ["2*346","Conrad Consulting"],["2*337","Searchability"],
+  ["2*350","McCoy Contractors"],["2*229","Carrington west"],
+  ["2*351","Greys Specialist Recruitment"],["2*353","Start Young UK"],
+  ["2*354","Recruitment Education Global Services"],["2*352","Experis Limited"],
+  ["2*355","Caritas Recruitment Limited"],["2*356","Nursing 24"],
+  ["2*357","SR2 Recruitment"],["2*358","Peel Solutions Ltd"],
+  ["2*361","Pracyva Limited"],["2*359","ERG Group"],["2*360","IF Recruitment"],
+  ["2*362","Valhalla Recruitment"],["2*365","Connect Recruitment Hub"],
+  ["2*364","Deekay Tech Recruitment Ltd"],["2*366","Your World"],
+  ["2*367","Planet Recruitment"],["5*368","ECJ PAYE"],
+  ["2*369","Vantage Recruitment Services"],["2*370","Quickline Recruitment Limited"],
+  ["2*371","iSource IT UK Ltd"],["2*375","The Labour Desk"],
+  ["2*376","Medical Staffing Ltd"],["2*377","KBC Technologies UK Limited"],
+  ["2*211","Infoplus"],["2*379","smart consulting"],["2*378","Rebel Recruiters"],
+  ["2*380","Essential Recruitment (UK) Ltd"],["2*381","James Andrews Recruitment"],
+  ["2*387","GTC RECRUITMENT"],["2*382","TRG"],["2*383","Investigo Limited"],
+  ["2*385","TRI Consulting Ltd"],["2*386","DataCareers Ltd"],
+  ["2*402","Select Engineering"],["2*388","Additions"],
+  ["2*389","Marcilly Recruitment Ltd"],["2*390","Everest Employee Recruitment Ltd"],
+  ["2*391","Devine Inspired Care"],["2*392","Eleventh Hour Group Ltd"],
+  ["2*393","Langley James IT Recruitment"],["2*394","TRS Staffing Solutions"],
+  ["2*395","Intro Construction Recruitment Limited"],
+  ["2*396","CV Consulting"],["2*397","LSA Recruit Limited"],
+  ["2*398","Parking Personnel"],["2*399","Grove Resourcing Group Ltd"],
+  ["2*400","Arthur Rai Medical Services"],["2*403","Stackstudio Digital Ltd"],
+  ["2*404","Zeal Recruitment Solutions Limited"],["2*410","eTeam Workforce Limited"],
+  ["2*411","Opus People Solutions"],["2*412","JS Manson Recruitment"],
+  ["2*405","Next step recruitment solutions NSSL"],["2*413","Line Up Aviation"],
+  ["2*407","Mcpheestaffing"],["2*414","Major Recruitment"],
+  ["2*415","Jumar Solutions Limited"],["2*416","Discovery 24 Ltd"],
+  ["2*417","Colossus Recruitment Limited"],["2*418","Initi8 Recruitment"],
+  ["2*419","Barclay Simpson"],["2*420","Globe Locums Ltd"],
+  ["2*421","Blueberry Talent Ltd"],["2*422","Castlefield Recruitment"],
+  ["2*423","Capilaux Ltd"],["2*424","Find.Co"],["2*312","Intechnology Group"],
+  ["2*429","Nexo Education"],["2*425","R3Vamp"],["2*426","Network Futures"],
+  ["2*427","BigBlue Search Ltd"],["2*428","1st Executive"],["2*430","Gap Technical"],
+  ["2*439","Acacium Group"],["2*440","Enigma Clinical Solutions"],
+  ["2*441","Prentis Solutions"],["2*438","Smartedge Solution"],
+  ["2*442","Vector Recruitment Solutions Ltd"],["2*443","Hunter Adams Limited"],
+  ["2*444","London Borough of Ealing"],["2*445","Selbourne Primary School"],
+  ["2*446","St Vincent Roman Catholic Primary School"],
+  ["2*447","St Raphael Catholic Primary School"],["2*448","Crest Academy"],
+  ["2*449","Rectech"],["2*450","Gershon Resourcing Ltd"],
+  ["2*452","Illuminet Solutions Limited"],["2*451","Accelerate Agency"],
+  ["2*453","Fox Morris Group Ltd"],["2*454","Intapeople Limited"],
+  ["2*455","BrightStrand International Ltd"],["2*437","Liquid Personnel (Should Be UMB)"],
+  ["2*457","S Three Partnership LLP"],["2*456","Watsons Property Ltd"],
+  ["2*459","C.K.R Consultants Ltd T/A Cameron Kennedy"],
+  ["2*458","St Marks Primary School"],
+  ["2*460","Abacus Health and Social Care Recruitment LTD"],
+  ["2*461","SCC"],["2*462","Greenford High School"],["2*463","Capelo Design Ltd"],
+  ["2*464","Thomas Gray Limited - UMB"],["2*469","Storm Technology Limited"],
+  ["2*468","Zebra People"],["2*470","Shelgate Ltd"],
+  ["2*472","Essential Employment Limited"],["2*473","Trinity Partners"],
+  ["2*474","Winova Global"],["2*475","MAL Contractors"],
+  ["2*476","Blue Pelican Consulting"],["2*477","Avencia"],["2*344","Sii"],
+  ["2*485","Honeybee Recruitment.com Ltd T/A Military Medical Personnel"],
+  ["2*478","Langley Search and Selection Ltd"],
+  ["2*479","European Huntingtons Disease Network"],
+  ["2*480","R Recruitment Ltd"],["2*481","Talent Trade Recruitment Limited"],
+  ["2*482","Precision Resource Group Limited"],["2*483","Carter Rolan Group"],
+  ["2*484","Imperium Solutions"],["2*486","Civils Recruitment Group"],
+  ["2*487","Toaster Ltd"],["2*488","Keystream"],["2*489","Class35"],
+  ["2*490","Inova/Volt"],["2*491","Troogue Ltd"],["2*492","Anglian Recruitment Limited"],
+  ["2*493","National Locums Ltd"],["2*494","Vostek Limited"],
+  ["2*495","Limitless Innovations Inv"],["2*496","Madisons Recruitment"],
+  ["2*501","Job Junction LTD"],["2*497","Atyeti"],["2*498","JLA Resourcing Ltd"],
+  ["2*499","Hellowork Consultants Limited"],["2*500","Keystream Consulting Ktd"],
+  ["2*502","TwinSix LLC"],["1*523","Ackerman Pierce Education"],
+  ["4*522","Ackerman Pierce Education PAYE"],["2*542","Handle Recruitment"],
+  ["2*541","Care4Health"],["2*540","Oscar Associates (UK) Ltd"],
+  ["2*544","Molimex BV"],
+  ["3*170","Intro Construction Recruitment Limited - CIS"],
+  ["2*536","BDS Recruitment"],["3*122","CPB NORTHWEST LTD - CIS"],
+  ["3*140","Trevella EasyPay - CIS"],["3*108","McCoy Contractors -CIS"],
+  ["3*189","Renowned Recruitment Services Ltd - CIS"],
+  ["3*184","Anglian Recruitment Limited - CIS"],
+  ["3*180","Nor-Dem LTD CIS"],["3*167","MSK CIS"],
+  ["3*187","Lewis Winter - CIS"],["3*120","Contek Recruitment Solutions -CIS"],
+  ["3*84","FIT Recruitment -CIS"],["3*166","Tank Recruitment -CIS"],
+  ["3*87","Prorec-CIS"],["3*130","John Parker Construction -CIS"],
+  ["3*90","Decoright-CIS"],["3*149","Planet Recruitment-CIS"],
+  ["3*85","Thomas Plant Hire-CIS"],["3*171","The Labour Desk-CIS"],
+  ["3*176","Thomas Grey Search and Selection-CIS"],
+  ["3*145","Track Personnel-CIS"],["3*110","Temple Recruitment-CIS"],
+  ["2*521","Pathway Education"],["2*532","Pyramid Consulting Europe Ltd"],
+  ["2*545","Direct Medics Healthcare"],["3*156","Skipper Recruit - CIS"],
+  ["1*546","Skipper Recruit - Consulting"],
+  ["6*547","Skipper Recruit - Consulting PAYE"],
+  ["2*543","Renowned Recruitment Services Ltd - UMB"],
+  ["2*548","CBS Butler"],["2*549","Completed Rehab Ltd"],
+  ["3*190","J & L Recruitment Ltd"]
+];
+
+// Deduplicate by code+name combo
+const seen = new Set();
+const agencies = rawData.filter(([code, name]) => {
+  const key = code + '|' + name;
+  if (seen.has(key)) return false;
+  seen.add(key);
+  return true;
+}).map(([code, name], i) => ({ id: i + 1, code, name }));
+
+let filtered = [...agencies];
+
+function getType(code) {
+  return code.split('*')[0];
+}
+
+function render() {
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('resultCount').textContent = '0 results';
+    return;
+  }
+
+  empty.style.display = 'none';
+  document.getElementById('resultCount').textContent = `${filtered.length} of ${agencies.length}`;
+
+  tbody.innerHTML = filtered.map((a, idx) => {
+    const type = getType(a.code);
+    return `<tr style="animation-delay:${Math.min(idx * 12, 300)}ms">
+      <td class="td-num">${idx + 1}</td>
+      <td><span class="code-badge">${a.code}</span></td>
+      <td class="agency-name">${a.name}</td>
+      <td><span class="type-badge type-${type}">Type ${type}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const type = document.getElementById('typeFilter').value;
+
+  filtered = agencies.filter(a => {
+    const matchSearch = !search || a.name.toLowerCase().includes(search) || a.code.toLowerCase().includes(search);
+    const matchType = !type || getType(a.code) === type;
+    return matchSearch && matchType;
+  });
+  render();
+}
+
+
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('newAgencyName').focus(), 250);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('newCodeNum').value = '';
+  document.getElementById('newAgencyName').value = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function addAgency() {
+  const type = document.getElementById('newType').value;
+  const num = document.getElementById('newCodeNum').value.trim();
+  const name = document.getElementById('newAgencyName').value.trim();
+
+  if (!num || !name) {
+    document.getElementById('newCodeNum').style.borderColor = num ? 'var(--border)' : 'var(--danger)';
+    document.getElementById('newAgencyName').style.borderColor = name ? 'var(--border)' : 'var(--danger)';
+    return;
+  }
+
+  const newEntry = {
+    id: Date.now(),
+    code: `${type}*${num}`,
+    name
+  };
+
+  agencies.unshift(newEntry);
+  document.getElementById('totalCount').textContent = agencies.length;
+  closeModal();
+  applyFilters();
+  showToast('✓ Agency added successfully');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+
+// Set sticky header offset dynamically
+function setTheadOffset() {
+  const toolbar = document.querySelector('.toolbar');
+  const h = toolbar ? toolbar.offsetHeight : 57;
+  document.documentElement.style.setProperty('--thead-top', h + 'px');
+}
+setTheadOffset();
+window.addEventListener('resize', setTheadOffset);
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('typeFilter').addEventListener('change', applyFilters);
+
+// Init
+document.getElementById('totalCount').textContent = agencies.length;
+applyFilters();
+</script>
+</body>
+</html>
