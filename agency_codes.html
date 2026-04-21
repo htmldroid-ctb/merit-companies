@@ -1171,20 +1171,34 @@ function showToast(msg, type = 'success') {
 }
 
 // ─────────────────────────────────────────────
-// FIX #12: thead offset recalculated after fonts load
+// FIX #12: thead offset — robust multi-pass calculation
+// Uses getBoundingClientRect (sub-pixel accurate), double-rAF to
+// wait for full paint, ResizeObserver for live updates, and
+// document.fonts.ready for after-font-load correction.
 // ─────────────────────────────────────────────
 function setTheadOffset() {
   const toolbar = document.querySelector('.toolbar');
-  const h = toolbar ? toolbar.offsetHeight : 57;
-  document.documentElement.style.setProperty('--thead-top', h + 'px');
+  const h = toolbar ? toolbar.getBoundingClientRect().height : 57;
+  document.documentElement.style.setProperty('--thead-top', Math.ceil(h) + 'px');
 }
 
+// 1. Immediate best-effort pass
 setTheadOffset();
+
+// 2. Double rAF: first frame queues layout, second frame reads it
+requestAnimationFrame(() => requestAnimationFrame(setTheadOffset));
+
+// 3. Keep in sync whenever the toolbar itself resizes
+if (window.ResizeObserver) {
+  new ResizeObserver(setTheadOffset).observe(document.querySelector('.toolbar'));
+}
+
+// 4. Fallback for window resize
 window.addEventListener('resize', setTheadOffset);
 
-// Recalculate after Google Fonts render (FIX #12)
+// 5. Re-run after Google Fonts render (FIX #12)
 if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(setTheadOffset);
+  document.fonts.ready.then(() => requestAnimationFrame(setTheadOffset));
 }
 
 // ─────────────────────────────────────────────
